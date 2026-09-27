@@ -66,7 +66,7 @@
       if (introActive) finishIntro(true);
       else if ($('#menu-button').getAttribute('aria-expanded') === 'true') { setMenu(false); $('#menu-button').focus(); }
     }
-    if (event.key === 'Tab' && introActive) { event.preventDefault(); $('#intro-skip').focus(); }
+    if (event.key === 'Tab' && introActive) { event.preventDefault(); intro.focus({preventScroll:true}); }
   });
 
   function curveThrough(points) {
@@ -178,7 +178,7 @@
     body.classList.remove('intro-playing');
     setBackgroundInert(false);
     if(restoreFocus && previousFocus?.isConnected) previousFocus.focus({preventScroll:true});
-    else if(document.activeElement=== $('#intro-skip')) {
+    else if(document.activeElement=== intro) {
       main.setAttribute('tabindex','-1'); main.focus({preventScroll:true});
     }
     buildPath();
@@ -226,7 +226,7 @@
     intro.hidden=false;
     intro.classList.remove('is-lit','is-leaving');
     setBackgroundInert(true);
-    $('#intro-skip').focus({preventScroll:true});
+    intro.focus({preventScroll:true});
     [$('#intro-line'),$('#intro-spark')].forEach(el=>el.getAnimations().forEach(a=>a.cancel()));
     const imageRect=$('#intro-brand').getBoundingClientRect();
     const x=imageRect.left+imageRect.width*.081;
@@ -371,8 +371,6 @@ const conversationToggle = $('#conversation-toggle');
       });
     });
   }
-
-  $('#intro-skip').addEventListener('click',()=>finishIntro(true));
 
   const replayButton = $('#replay');
   if (replayButton) {
